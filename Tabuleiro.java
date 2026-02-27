@@ -1,9 +1,11 @@
 public class Tabuleiro {
     private Casa[][] casas;
     private int tamanhoTabuleiro;
+    private int naviosRestantes;
 
-    public Tabuleiro(int tamanhoTabuleiro) {
+    public Tabuleiro(int tamanhoTabuleiro, int quantidadeNavios) {
         this.tamanhoTabuleiro = tamanhoTabuleiro;
+        this.naviosRestantes = quantidadeNavios;
         this.casas = new Casa[this.tamanhoTabuleiro][this.tamanhoTabuleiro];
         for (int i = 0; i < this.tamanhoTabuleiro; i++) {
             for (int j = 0; j < this.tamanhoTabuleiro; j++) {
@@ -23,7 +25,7 @@ public class Tabuleiro {
             }
             System.out.println();
         }
-        if (descrição == null || !descrição) {
+        if (!descrição) {
             for (int i = 0; i < this.tamanhoTabuleiro; i++) {
                 for (int j = 0; j < this.tamanhoTabuleiro; j++) {
                     System.out.print(this.casas[i][j].getRepresentacao() + " ");
@@ -57,4 +59,23 @@ public class Tabuleiro {
         this.casas[linha][coluna] = valor;
     }
 
+    public void bombardiar(Tabuleiro adversario, int linha, int coluna) {
+       if (linha >= tamanhoTabuleiro || coluna >= tamanhoTabuleiro || linha < 0 || coluna < 0) {
+           System.out.println("Coordenadas inválidas!");
+           return;
+       }
+       
+        if (adversario.getCasa(linha, coluna) == Casa.NAVIO) {
+            this.setCasa(linha, coluna, Casa.TIRO_ACERTADO);
+            adversario.naviosRestantes--;
+            if (adversario.naviosRestantes <= 0) {
+                System.out.println("Parabéns! Você venceu!");
+                System.exit(0);
+            }
+        }
+        else {
+            this.setCasa(linha, coluna, Casa.TIRO_ERRADO);
+        }
+
+    }
 }
